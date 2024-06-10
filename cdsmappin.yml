@@ -1,0 +1,267 @@
+Exact:
+  diagnosis:
+  - disease_type
+  - vital_status
+  - primary_diagnosis
+  - primary_site
+  - age_at_diagnosis
+  - tumor_grade
+  - tumor_stage_clinical_m
+  - tumor_stage_clinical_n
+  - tumor_stage_clinical_t
+  - morphology
+  - progression_or_recurrence
+  - days_to_recurrence
+  - days_to_last_followup
+  - last_known_disease_status
+  file:
+  - file_name
+  - file_type
+  - file_size
+  - md5sum
+  - file_url_in_cds
+  - experimental_strategy_and_data_subtype
+  genomic_info:
+  - library_id
+  - bases
+  - number_of_reads
+  - avg_read_length
+  - coverage
+  - reference_genome_assembly
+  - custom_assembly_fasta_file_for_alignment
+  - design_description
+  - library_strategy
+  - library_layout
+  - library_source
+  - library_selection
+  - platform
+  - instrument_model
+  - sequence_alignment_software
+  participant:
+  - participant_id
+  - race
+  - gender
+  - ethnicity
+  - dbGaP_subject_id
+  program:
+  - program_name
+  - program_acronym
+  - program_external_url
+  - institution
+  sample:
+  - sample_id
+  - sample_type
+  - sample_tumor_status
+  - sample_anatomic_site
+  - sample_age_at_collection
+  - derived_from_specimen
+  - biosample_accession
+  study:
+  - study_name
+  - study_acronym
+  - study_description
+  - phs_accession
+  - funding_agency
+  - funding_source_program_name
+  - grant_id
+  - clinical_trial_identifier
+  - clinical_trial_arm
+  - organism_species
+  - adult_or_childhood_study
+  - number_of_participants
+  - number_of_samples
+  - study_data_types
+  - acl
+  - authz
+  treatment:
+  - treatment_type
+  - treatment_outcome
+  - days_to_treatment
+  - therapeutic_agents
+Partial:
+  file:
+  - study.phs_accession: phs_accession
+  - sample.sample_id: sample_id
+  image:
+  - species: organism_species
+  participant:
+  - study.phs_accession: phs_accession
+  study:
+  - program.program_acronym: program_acronym
+  - data_types: study_data_types
+Manual:
+  diagnosis:
+   - participant.study_participant_id: participant_id
+  participant:
+    - study_participant_id: participant_id
+  sample:
+    - participant.study_participant_id: participant_id
+  study:
+    - primary_investigator_name: 'last_name'
+    - primary_investigator_email: 'email'
+Unmapped:
+  diagnosis:
+  - participant.study_participant_id
+  - study_diagnosis_id
+  - diagnosis_id
+  - incidence_type
+  - days_to_last_known_status
+  - crdc_id
+  file:
+  - file_id
+  - file_description
+  - submission_version
+  - crdc_id
+  genomic_info:
+  - type
+  - file.file_id
+  - genomic_info_id
+  - crdc_id
+  image:
+  - type
+  - file.file_id
+  - study_link_id
+  - de_identification_method_type
+  - de_identification_method_description
+  - de_identification_software
+  - license
+  - citation_or_DOI
+  - image_modality
+  - imaging_equipment_manufacturer
+  - imaging_equipment_model
+  - imaging_sofware
+  - imaging_protocol
+  - organ_or_tissue
+  - performed_imaging_study_description
+  - performed_imaging_study_admittingDiagnosisCode
+  - performed_imaging_study_nonAcquisitionModalitiesInStudyCode
+  - performed_imaging_study_lossyImageCompressionIndicator
+  - performed_imaging_study_summary
+  - performed_imaging_study_primaryAnatomicSiteCode
+  - performed_imaging_study_acquisitionTypeCode
+  - performed_imaging_study_imageTypeCode
+  - performed_imaging_study_cardiacSynchronizationTechniqueCode
+  - performed_imaging_study_dataCollectionDiameter
+  - performed_imaging_study_respiratoryMotionTechniqueCode
+  - performed_imaging_study_bodyPositionCode
+  - performed_imaging_study_typeCode
+  - performed_imaging_study_algorithmCode
+  - performed_imaging_study_reconstructionFieldOfViewHeight
+  - performed_imaging_study_reconstructionFieldOfViewWidth
+  - performed_imaging_study_reconstructionDiameter
+  - performed_imaging_study_sliceThickness
+  - performed_imaging_study_reconstructionInterval
+  - longitudinal_temporal_event_type
+  - longitudinal_temporal_event_offset
+  - CTAquisitionProtocolElement_singleCollimationWidth
+  - CTAquisitionProtocolElement_totalCollimationWidth
+  - CTAquisitionProtocolElement_gantryDetectorTilt
+  - CTAquisitionProtocolElement_tableSpeed
+  - CTAquisitionProtocolElement_spiralPitchFactor
+  - CTAquisitionProtocolElement_ctdiVol
+  - CTAquisitionProtocolElement_ctdiPhantomTypeCode
+  - CTAquisitionProtocolElement_kVp
+  - CTAquisitionProtocolElement_exposureModulationType_Code
+  - CTImageReconstructionProtocolElement_convolutionKernel
+  - CTImageReconstructionProtocolElement_convolutionKernelGroupCode
+  - MRImageAcquisitionProtocolElement_echoPulseSequenceCategoryCode
+  - MRImageAcquisitionProtocolElement_diffusionBValue
+  - MRImageAcquisitionProtocolElement_diffusionDirectionalityCode
+  - MRImageAcquisitionProtocolElement_magneticFieldStrength
+  - MRImageAcquisitionProtocolElement_resonantNucleusCode
+  - MRImageAcquisitionProtocolElement_acquisitionContrastCode
+  - MRImageAcquisitionProtocolElement_inversionRecoveryIndicator
+  - MRImageAcquisitionProtocolElement_pulseSequenceName
+  - MRImageAcquisitionProtocolElement_multipleSpinEchoIndicator
+  - MRImageAcquisitionProtocolElement_phaseContrastIndicator
+  - MRImageAcquisitionProtocolElement_timeOfFlightContrastIndicator
+  - MRImageAcquisitionProtocolElement_arterialSpinLabelingContrastCode
+  - MRImageAcquisitionProtocolElement_steadyStatePulseSequenceCode
+  - MRImageAcquisitionProtocolElement_echoPlanarPulseSequenceIndicator
+  - MRImageAcquisitionProtocolElement_saturationRecoveryIndicator
+  - MRImageAcquisitionProtocolElement_spectrallySelectedSuppressionCode
+  - MRImageReconstructionProtocolElement_complexImageComponentCode
+  - PETImagingAcquisitionProtocolElement_gantryDetectorTilt
+  - Radiopharmaceutical_radionuclideCode
+  - acquisition_method_type
+  - tumor_tissue_type
+  - issue_fixative
+  - embedding_medium
+  - staining_method
+  - objective
+  - nominal_magnification
+  - immersion
+  - lens_numerical_aperture
+  - working_distance
+  - imaging_assay_type
+  - pyramid
+  - physical_size_x
+  - physical_size_y
+  - physical_size_z
+  - size_c
+  - size_t
+  - size_x
+  - size_y
+  - size_z
+  - channel_metadata_filename
+  - channel_metadata_file_url_in_cds
+  - channel_id
+  - channel_name
+  - cycle_number
+  - sub_cycle_number
+  - target_name
+  - antibody_name
+  - rrid_identifier
+  - fluorophore
+  - clone
+  - lot
+  - vendor
+  - catalog_number
+  - excitation_wavelength
+  - emission_wavelength
+  - excitation_bandwidth
+  - emission_bandwidth
+  - metal_isotope_element
+  - oligo_barcode_upper_strand
+  - oligo_barcode_lower_strand
+  - diluation
+  - concentration
+  - passes_qc
+  - crdc_id
+  participant:
+  - type
+  - study_participant_id
+  - crdc_id
+  program:
+  - type
+  - program_short_description
+  - program_full_description
+  - program_sort_order
+  - crdc_id
+  sample:
+  - participant.study_participant_id
+  - crdc_id
+  study:
+  - short_description
+  - study_external_url
+  - primary_investigator_name
+  - primary_investigator_email
+  - co_investigator_name
+  - co_investigator_email
+  - bioproject_accession
+  - index_date
+  - cds_requestor
+  - clinical_trial_system
+  - file_types
+  - data_access_level
+  - cds_primary_bucket
+  - cds_secondary_bucket
+  - cds_tertiary_bucket
+  - file_types_and_format
+  - size_of_data_being_uploaded
+  - study_access
+  - study_version
+  - crdc_id
+  treatment:
+  - treatment_id
+  - crdc_id
