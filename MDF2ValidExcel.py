@@ -10,7 +10,6 @@ def readYaml(yamlfile):
     return jsonstuff
 
 def validationColumn(wb, sheetname, prop, values, valcol):
-    print(wb.sheetnames)
     sheet = wb.get_sheet_by_name(sheetname)
     row = 1
     sheet.cell(row=row, column=valcol).value = prop
