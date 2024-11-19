@@ -1,6 +1,0 @@
-[core]
-	repositoryformatversion = 0
-	filemode = true
-[remote "origin"]
-	url = https://github.com/pihltd/DataHubTools.git
-	fetch = +refs/heads/*:refs/remotes/origin/*
