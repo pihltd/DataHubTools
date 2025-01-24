@@ -1,0 +1,25 @@
+"data_type" : "Binary"
+# file_size in bytes
+"file_size": 1024
+"output_directory": 'C:\Users\pihltd\Documents\modeltest\uat\'
+"file_names":
+  - NA20811.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20811.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20810.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20810.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20809.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20809.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20808.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20808.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20807.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20807.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20806.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20805.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20805.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20804.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20804.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20803.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20803.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20802.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai
+  - NA20802.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam
+  - NA20801.chrom20.ILLUMINA.bwa.TSI.low_coverage.20101123.bam.bai

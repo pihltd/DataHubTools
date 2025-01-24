@@ -1,0 +1,45 @@
+"data_type" : "Binary"
+# file_size in bytes
+"file_size": 1024
+"output_directory": 'C:\Users\pihltd\Documents\modeltest\uat\'
+"file_names":
+  - Tumor_3-set_1-label_118-frac_2-F14.wiff.scan
+  - Tumor_3-set_1-label_118-frac_2-F14.wiff
+  - Tumor_3-set_1-label_118-frac_1-F6.wiff.scan
+  - Tumor_3-set_1-label_118-frac_1-F6.wiff
+  - Tumor_2-set_1-label_117-frac_3-F21.wiff.scan
+  - Tumor_2-set_1-label_117-frac_3-F21.wiff
+  - Tumor_2-set_1-label_117-frac_2-F13.wiff.scan
+  - Tumor_2-set_1-label_117-frac_2-F13.wiff
+  - Tumor_2-set_1-label_117-frac_1-F5.wiff.scan
+  - Tumor_2-set_1-label_117-frac_1-F5.wiff
+  - Tumor_1-set_1-label_116-frac_3-F20.wiff.scan
+  - Tumor_1-set_1-label_116-frac_3-F20.wiff
+  - Tumor_1-set_1-label_116-frac_2-F12.wiff.scan
+  - Tumor_1-set_1-label_116-frac_2-F12.wiff
+  - Tumor_1-set_1-label_116-frac_1-F4.wiff.scan
+  - Tumor_1-set_1-label_116-frac_1-F4.wiff
+  - Reference-set_1-label_121-frac_3-F24.wiff.scan
+  - Reference-set_1-label_121-frac_3-F24.wiff
+  - Reference-set_1-label_121-frac_2-F16.wiff.scan
+  - Reference-set_1-label_121-frac_2-F16.wiff
+  - Reference-set_1-label_121-frac_1-F8.wiff.scan
+  - Reference-set_1-label_121-frac_1-F8.wiff
+  - Ctrl_3-set_1-label_115-frac_3-F19.wiff.scan
+  - Ctrl_3-set_1-label_115-frac_3-F19.wiff
+  - Ctrl_3-set_1-label_115-frac_2-F11.wiff.scan
+  - Ctrl_3-set_1-label_115-frac_2-F11.wiff
+  - Ctrl_3-set_1-label_115-frac_1-F3.wiff.scan
+  - Ctrl_3-set_1-label_115-frac_1-F3.wiff
+  - Ctrl_2-set_1-label_114-frac_3-F18.wiff.scan
+  - Ctrl_2-set_1-label_114-frac_3-F18.wiff
+  - Ctrl_2-set_1-label_114-frac_2-F10.wiff.scan
+  - Ctrl_2-set_1-label_114-frac_2-F10.wiff
+  - Ctrl_2-set_1-label_114-frac_1-F2.wiff.scan
+  - Ctrl_2-set_1-label_114-frac_1-F2.wiff
+  - Ctrl_1-set_1-label_113-frac_3-F17.wiff.scan
+  - Ctrl_1-set_1-label_113-frac_3-F17.wiff
+  - Ctrl_1-set_1-label_113-frac_2-F9.wiff.scan
+  - Ctrl_1-set_1-label_113-frac_2-F9.wiff
+  - Ctrl_1-set_1-label_113-frac_1-F1.wiff.scan
+  - Ctrl_1-set_1-label_113-frac_1-F1.wiff
