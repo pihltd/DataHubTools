@@ -1,0 +1,14 @@
+#Adds the latest version number for a CDE ID to MDF property files
+import argparse
+import bento_mdf
+from crdclib import crdclib
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--configfile", required=True,  help="Configuration file")
+    #parser.add_argument("-v", "--validate", action='store_true', help="Run validation")
+
+    args = parser.parse_args()
+
+    main(args)
