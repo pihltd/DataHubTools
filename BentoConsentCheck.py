@@ -1,0 +1,192 @@
+import argparse
+import requests
+import json
+import pandas as pd
+
+
+# Print iterations progress
+# https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
+def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, length = 100, fill = '█', printEnd = "\r"):
+    """
+    Call in a loop to create terminal progress bar
+    @params:
+        iteration   - Required  : current iteration (Int)
+        total       - Required  : total iterations (Int)
+        prefix      - Optional  : prefix string (Str)
+        suffix      - Optional  : suffix string (Str)
+        decimals    - Optional  : positive number of decimals in percent complete (Int)
+        length      - Optional  : character length of bar (Int)
+        fill        - Optional  : bar fill character (Str)
+        printEnd    - Optional  : end character (e.g. "\r", "\r\n") (Str)
+    """
+    percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
+    filledLength = int(length * iteration // total)
+    bar = fill * filledLength + '-' * (length - filledLength)
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end = printEnd)
+    # Print New Line on Complete
+    if iteration == total: 
+        print()
+
+def runSSTRQuery(phs, page):
+    headers = {"accept" : "application/json"}
+    sstr_url = f"https://www.ncbi.nlm.nih.gov/gap/sstr/api/v1/study/{phs}/subjects?page={page}&page_size=25"
+    jsonresults = requests.get(sstr_url, headers=headers)
+    return jsonresults.json()
+
+
+
+def runBentoAPIQuery(url, query, variables=None):
+
+    headers = {'accept': 'application/json'}
+    try:
+        if variables is None:
+            results = requests.post(url, headers=headers, json={'query': query})
+        else:
+            results = requests.post(url, headers=headers, json={'query': query, 'variables': variables})
+    except requests.exceptions.HTTPError as e:
+        return (f"HTTPError:\n{e}")
+        
+    if results.status_code == 200:
+        results = json.loads(results.content.decode())
+        return results
+    else:
+        return (f"Error Code: {results.status_code}\n{results.content}")
+
+
+
+def getPHS(url):
+    phslist = []
+    phsquery = """
+    {
+        studies(
+            study_names: [],
+            study_acronyms: [],
+            phs_accessions: []
+        ){
+            study_name
+            study_acronym
+            phs_accession
+        }
+    }
+    """
+    res = runBentoAPIQuery(url, phsquery)
+    #print(res)
+    
+    for entry in res['data']['studies']:
+        phslist.append(entry['phs_accession'])  
+    return phslist  
+
+
+def buildBentoDF(url, phs, verbose = False):
+    bento_df = pd.DataFrame(columns=["participant_id", "dbGaP_subject_id", "phs_accession"])
+     
+    casequery = """
+        query phsCases($phs: String!, $offset: Int!){
+            participants(phs_accession: $phs, offset: $offset){
+                participant_id
+                dbGaP_subject_id
+                phs_accession
+            }
+        }
+    """
+    offset = 0
+    variables = {"phs": phs, "offset": offset}
+    bentoqueryres = runBentoAPIQuery(url, casequery, variables)
+    while len(bentoqueryres['data']['participants']) >=1:
+            offset = offset + len(bentoqueryres['data']['participants'])
+            for entry in bentoqueryres['data']['participants']:
+                bento_df.loc[len(bento_df)] = entry
+            variables = {"phs": phs, "offset": offset}
+            if verbose:
+                print(f"PHS: {phs}\t Offset: {str(offset)}")
+            bentoqueryres = runBentoAPIQuery(url, casequery, variables)
+    return bento_df
+
+
+
+def buildDbGaPDF(phs, verbose=False):
+    # TODO: Build in pagination looping
+    sstrcols = ["study_key", "phs", "submitted_subject_id", "dbgap_subject_id", "consent_code", "consent_abbreviation", "case_control", "has_image", "samples"]
+    sstr_df = pd.DataFrame(columns=sstrcols)
+    pagecounter = 1
+    sstrqueryres = runSSTRQuery(phs, pagecounter)
+    for entry in sstrqueryres['subjects']:
+        sstr_df.loc[len(sstr_df)] = entry
+    pagecount = sstrqueryres['pagination']['total']
+    
+    # Progress bar
+    # https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
+    if verbose:
+        print(f"SSTR query for {phs}")
+        printProgressBar(0,pagecount, prefix="Progress", suffix="Complete", length=50)
+    while pagecounter <= pagecount:
+        pagecounter = pagecounter + 1
+        if verbose:
+            printProgressBar(pagecounter,pagecount, prefix="Progress", suffix="Complete", length=50)
+        sstrqueryres = runSSTRQuery(phs, pagecounter)
+        for entry in sstrqueryres['subjects']:
+            sstr_df.loc[len(sstr_df)] = entry
+    
+    return sstr_df
+
+
+def buildComparisonDF(bento_df, sstr_df):
+    finalcols = ["participant_id", "dbgap_subject_id", "consent_code", "consent_abbreviation", "phs_accession"]
+    final_df = pd.DataFrame(columns=finalcols)
+    
+    
+    for index, row in bento_df.iterrows():
+        dbgindex = sstr_df.index[sstr_df['submitted_subject_id'] == row['participant_id']]
+        if len(sstr_df['dbgap_subject_id'].values[dbgindex]) >= 1:
+            dbgid = sstr_df['dbgap_subject_id'].values[dbgindex][0]
+            code = sstr_df['consent_code'].values[dbgindex][0]
+            abbrev = sstr_df['consent_abbreviation'].values[dbgindex][0]
+        else:
+            dbgid = 'N/A'
+            code = 'N/A'
+            abbrev = 'N/A'
+        final_df.loc[len(final_df)] = {"participant_id": row['participant_id'], "dbgap_subject_id": dbgid,
+                                       "consent_code": code, "consent_abbreviation": abbrev, "phs_accession": row['phs_accession']}
+    return final_df
+    
+    
+
+def main(args):
+    cdsurl =' https://general.datacommons.cancer.gov/v1/graphql/'
+    #phs = args.phs
+    if args.phs == 'all':
+        
+        phslist = getPHS(cdsurl)
+    else:
+        phslist=[args.phs]
+
+    for phs in phslist:
+        
+        if args.verbose:
+            print(f"Working on {phs}")
+        
+        #Hit the GC API for the participants in the study
+        bento_df = buildBentoDF(cdsurl, phs, args.verbose)
+        
+        #Hit the SSTR endpoint for the dbGaP info
+        sstr_df = buildDbGaPDF(phs, args.verbose)
+        
+        #build the comparison DF
+        final_df = buildComparisonDF(bento_df, sstr_df)
+
+        #Write the results
+        outputpath = r"C:\Users\pihltd\Documents\ConsentCodes"
+        outputfile = outputpath+"\\"+phs+"_gc_test.csv"
+        if args.verbose:
+            print(f"Writing to {outputfile}")
+        final_df.to_csv(outputfile, sep="\t")
+        
+    
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p", "--phs",  required=True, help="phs number to check. Version suggested")
+    parser.add_argument("-v", "--verbose", action='store_true', help='Verbose output')
+        
+    args = parser.parse_args()
+    main(args)
