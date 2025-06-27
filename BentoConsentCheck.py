@@ -28,8 +28,9 @@ def printProgressBar (iteration, total, prefix = '', suffix = '', decimals = 1, 
         print()
 
 def runSSTRQuery(phs, page):
+    pagesize = 250
     headers = {"accept" : "application/json"}
-    sstr_url = f"https://www.ncbi.nlm.nih.gov/gap/sstr/api/v1/study/{phs}/subjects?page={page}&page_size=25"
+    sstr_url = f"https://www.ncbi.nlm.nih.gov/gap/sstr/api/v1/study/{phs}/subjects?page={page}&page_size={pagesize}"
     jsonresults = requests.get(sstr_url, headers=headers)
     return jsonresults.json()
 
@@ -47,8 +48,12 @@ def runBentoAPIQuery(url, query, variables=None):
         return (f"HTTPError:\n{e}")
         
     if results.status_code == 200:
-        results = json.loads(results.content.decode())
-        return results
+        if 'errors' in results:
+            # GC has a connection bug where it fails the first time, but works the second
+            runBentoAPIQuery(url, query, variables)
+        else:
+            results = json.loads(results.content.decode())
+            return results
     else:
         return (f"Error Code: {results.status_code}\n{results.content}")
 
@@ -79,10 +84,14 @@ def getPHS(url):
 
 def buildBentoDF(url, phs, verbose = False):
     bento_df = pd.DataFrame(columns=["participant_id", "dbGaP_subject_id", "phs_accession"])
+    
+    if "." in phs:
+        phslist = phs.split('.')
+        phs = phslist[0]
      
     casequery = """
-        query phsCases($phs: String!, $offset: Int!){
-            participants(phs_accession: $phs, offset: $offset){
+        query phsCases($phs: String!, $offset: Int!, $first: Int!){
+            participants(phs_accession: $phs, offset: $offset, first: $first){
                 participant_id
                 dbGaP_subject_id
                 phs_accession
@@ -90,13 +99,16 @@ def buildBentoDF(url, phs, verbose = False):
         }
     """
     offset = 0
-    variables = {"phs": phs, "offset": offset}
+    first = 100
+    variables = {"phs": phs, "offset": offset, "first": first}
     bentoqueryres = runBentoAPIQuery(url, casequery, variables)
-    while len(bentoqueryres['data']['participants']) >=1:
+    if bentoqueryres['data']['participants'] is None:
+        bentoqueryres = runBentoAPIQuery(url, casequery, variables)
+    while len(bentoqueryres['data']['participants']) >= 1:
             offset = offset + len(bentoqueryres['data']['participants'])
             for entry in bentoqueryres['data']['participants']:
                 bento_df.loc[len(bento_df)] = entry
-            variables = {"phs": phs, "offset": offset}
+            variables = {"phs": phs, "offset": offset, "first": first}
             if verbose:
                 print(f"PHS: {phs}\t Offset: {str(offset)}")
             bentoqueryres = runBentoAPIQuery(url, casequery, variables)
@@ -116,6 +128,8 @@ def buildDbGaPDF(phs, verbose=False):
     
     # Progress bar
     # https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
+    
+    #pagesize = 250
     if verbose:
         print(f"SSTR query for {phs}")
         printProgressBar(0,pagecount, prefix="Progress", suffix="Complete", length=50)
