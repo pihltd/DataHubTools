@@ -66,7 +66,9 @@ def getPHS(url):
         studies(
             study_names: [],
             study_acronyms: [],
-            phs_accessions: []
+            phs_accessions: [],
+            offset: 0,
+            first: 100
         ){
             study_name
             study_acronym
@@ -124,7 +126,10 @@ def buildDbGaPDF(phs, verbose=False):
     sstrqueryres = runSSTRQuery(phs, pagecounter)
     for entry in sstrqueryres['subjects']:
         sstr_df.loc[len(sstr_df)] = entry
-    pagecount = sstrqueryres['pagination']['total']
+    if 'pagination' in sstrqueryres:
+        pagecount = sstrqueryres['pagination']['total']
+    else:
+        pagecount = 1
     
     # Progress bar
     # https://stackoverflow.com/questions/3173320/text-progress-bar-in-terminal-with-block-characters
@@ -199,7 +204,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-p", "--phs",  required=True, help="phs number to check. Version suggested")
+    parser.add_argument("-p", "--phs",  required=True, help="phs number to check. Version suggested. Use 'all' to get all studies in GC.")
     parser.add_argument("-v", "--verbose", action='store_true', help='Verbose output')
         
     args = parser.parse_args()
