@@ -149,13 +149,25 @@ def buildDbGaPDF(phs, verbose=False):
     return sstr_df
 
 
-def buildComparisonDF(bento_df, sstr_df):
+
+def buildFiledbGaPDF(sstrfile, phs):
+    sstr_df = pd.read_csv(sstrfile, sep="\t")
+    sstr_df = sstr_df.rename(columns={'SUBJECT_ID':'submitted_subject_id', 'CONSENT':'consent_code'})
+    sstr_df['phs_accession'] = phs
+    return sstr_df
+
+def buildComparisonDF(bento_df, sstr_df, samplesearch=False):
     finalcols = ["participant_id", "dbgap_subject_id", "consent_code", "consent_abbreviation", "phs_accession"]
     final_df = pd.DataFrame(columns=finalcols)
+    if samplesearch:
+        print('SEARCHING SAMPLES')
+        searchkey = 'SAMPLE_ID'
+    else:
+        searchkey = 'submitted_subject_id'
     
     
     for index, row in bento_df.iterrows():
-        dbgindex = sstr_df.index[sstr_df['submitted_subject_id'] == row['participant_id']]
+        dbgindex = sstr_df.index[sstr_df[searchkey] == row['participant_id']]
         if len(sstr_df['dbgap_subject_id'].values[dbgindex]) >= 1:
             dbgid = sstr_df['dbgap_subject_id'].values[dbgindex][0]
             code = sstr_df['consent_code'].values[dbgindex][0]
@@ -173,6 +185,7 @@ def buildComparisonDF(bento_df, sstr_df):
 def main(args):
     cdsurl =' https://general.datacommons.cancer.gov/v1/graphql/'
     #phs = args.phs
+    print (f"Args: {args}")
     if args.phs == 'all':
         
         phslist = getPHS(cdsurl)
@@ -183,15 +196,26 @@ def main(args):
         
         if args.verbose:
             print(f"Working on {phs}")
+        if args.sstrfile is not None:
+            print(f"Using file {args.sstrfile}")
+        if args.usesamples:
+            print("Will search against sample IDs")
         
         #Hit the GC API for the participants in the study
         bento_df = buildBentoDF(cdsurl, phs, args.verbose)
         
-        #Hit the SSTR endpoint for the dbGaP info
-        sstr_df = buildDbGaPDF(phs, args.verbose)
+        if args.sstrfile is None:
+            if args.verbose:
+                print("Using SSTR API")
+            #Hit the SSTR endpoint for the dbGaP info
+            sstr_df = buildDbGaPDF(phs, args.verbose)
+        else:
+            if args.verbose:
+                print(f"Using file {args.sstrfile}")
+            sstr_df = buildFiledbGaPDF(args.sstrfile,phs)
         
         #build the comparison DF
-        final_df = buildComparisonDF(bento_df, sstr_df)
+        final_df = buildComparisonDF(bento_df, sstr_df, args.usesamples)
 
         #Write the results
         outputpath = r"C:\Users\pihltd\Documents\ConsentCodes"
@@ -205,6 +229,8 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-p", "--phs",  required=True, help="phs number to check. Version suggested. Use 'all' to get all studies in GC.")
+    parser.add_argument("-f", "--sstrfile", help='Use the provided SSTR file instead of the SSTR API')
+    parser.add_argument("-s", "--usesamples", action='store_true', help='Search against dbGaP Sample ID instead of patient ID')
     parser.add_argument("-v", "--verbose", action='store_true', help='Verbose output')
         
     args = parser.parse_args()
