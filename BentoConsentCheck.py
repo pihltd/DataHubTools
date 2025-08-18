@@ -84,14 +84,14 @@ def getPHS(url):
     return phslist  
 
 
-def buildBentoDF(url, phs, verbose = False):
+def buildBentoDF(url, phs, queryroot, dc, verbose = False):
     bento_df = pd.DataFrame(columns=["participant_id", "dbGaP_subject_id", "phs_accession"])
     
     if "." in phs:
         phslist = phs.split('.')
         phs = phslist[0]
      
-    casequery = """
+    gcquery = """
         query phsCases($phs: String!, $offset: Int!, $first: Int!){
             participants(phs_accession: $phs, offset: $offset, first: $first){
                 participant_id
@@ -100,20 +100,42 @@ def buildBentoDF(url, phs, verbose = False):
             }
         }
     """
+    
+    ctdcquery = """
+      query ctdcCases($offset: Int!, $first: Int!){
+          participantOverview(offset: $offset, first: $first){
+              participant_id
+          }
+      }
+    """
+    
     offset = 0
     first = 100
-    variables = {"phs": phs, "offset": offset, "first": first}
-    bentoqueryres = runBentoAPIQuery(url, casequery, variables)
-    if bentoqueryres['data']['participants'] is None:
-        bentoqueryres = runBentoAPIQuery(url, casequery, variables)
-    while len(bentoqueryres['data']['participants']) >= 1:
-            offset = offset + len(bentoqueryres['data']['participants'])
-            for entry in bentoqueryres['data']['participants']:
+    
+    
+    if dc == 'GC':
+        query = gcquery
+        variables = {"phs": phs, "offset": offset, "first": first}
+    elif dc == 'CTDC':
+        query = ctdcquery
+        variables = {"offset": offset, "first": first}
+    
+    
+    
+    #bentoqueryres = runBentoAPIQuery(url, casequery, variables)
+    bentoqueryres = runBentoAPIQuery(url, query, variables)
+    #if bentoqueryres['data']['participants'] is None:
+    print(bentoqueryres)
+    if bentoqueryres['data'][queryroot] is None:
+        bentoqueryres = runBentoAPIQuery(url, query, variables)
+    while len(bentoqueryres['data'][queryroot]) >= 1:
+            offset = offset + len(bentoqueryres['data'][queryroot])
+            for entry in bentoqueryres['data'][queryroot]:
                 bento_df.loc[len(bento_df)] = entry
             variables = {"phs": phs, "offset": offset, "first": first}
             if verbose:
                 print(f"PHS: {phs}\t Offset: {str(offset)}")
-            bentoqueryres = runBentoAPIQuery(url, casequery, variables)
+            bentoqueryres = runBentoAPIQuery(url, query, variables)
     return bento_df
 
 
@@ -184,6 +206,7 @@ def buildComparisonDF(bento_df, sstr_df, samplesearch=False):
 
 def main(args):
     cdsurl =' https://general.datacommons.cancer.gov/v1/graphql/'
+    ctdcurl = 'https://clinical.datacommons.cancer.gov/v1/graphql/'
     #phs = args.phs
     print (f"Args: {args}")
     if args.phs == 'all':
@@ -202,7 +225,8 @@ def main(args):
             print("Will search against sample IDs")
         
         #Hit the GC API for the participants in the study
-        bento_df = buildBentoDF(cdsurl, phs, args.verbose)
+        #bento_df = buildBentoDF(cdsurl, phs, args.verbose)
+        bento_df = buildBentoDF(ctdcurl, phs, 'participantOverview', 'CTDC', args.verbose)
         
         if args.sstrfile is None:
             if args.verbose:
@@ -219,7 +243,7 @@ def main(args):
 
         #Write the results
         outputpath = r"C:\Users\pihltd\Documents\ConsentCodes"
-        outputfile = outputpath+"\\"+phs+"_gc_test.csv"
+        outputfile = outputpath+"\\"+phs+"_ctdc_test.csv"
         if args.verbose:
             print(f"Writing to {outputfile}")
         final_df.to_csv(outputfile, sep="\t")

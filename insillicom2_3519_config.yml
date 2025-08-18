@@ -1,0 +1,46 @@
+# This is a list of dictionry.  Key is the node, value is the full file path
+submissionfiles:
+  - diagnosis: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_diagnosis.tsv'
+  - file: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_file.tsv'
+  - genomic_info: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_genomicinfo.tsv'
+  - participant: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_participant.tsv'
+  - sample: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_sample.tsv'
+  - study: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_study.tsv'
+outputdir: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\TDP Fixes\Insilicom2\phs003519\'
+separator: 'tab'  #Can be tab or comma
+ #Available fixes
+    # fileid - popula"C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs003519\df_sample.tsv"tes the file_id column of the file node
+    # participantphs: Adds the study phs number to the participant sheet in the study.phs_accession column
+    # study_participant_id: Creates the study_participant_id and populates the column
+    # diagnosis_id
+    # study_diagnosis_id:  Creates a study_diagnosis_id 
+    # genomic_info_id: Creates a genonmic_info_id
+    # update_study_participant_id: Use if there is just a patient id in the study_participant_id columns
+fixes:
+  phs: 'phs003519'
+  fileid: 
+    file: 'file_id'
+  #participantphs:
+  #  participant: 'study.phs_accession'
+  #  study: 'phs_accession'
+  #study_participant_id:
+  #  participant: 'study_participant_id'
+  diagnosis_id:
+    idfield: 'diagnosis_id'
+    diagnosis: 'primary_diagnosis'
+    site: 'primary_site'
+  study_diagnosis_id:
+    idfield: 'study_diagnosis_id'
+    diagnosis: 'diagnosis_id'
+    participant: 'participant.study_participant_id'
+  update_study_participant_id:
+    refnode: 'participant'
+    refpartid: 'participant_id'
+    refstudypartid: 'study_participant_id'
+    nodes:
+      - 'diagnosis'
+      - 'sample'
+    idfield: 'participant.study_participant_id'
+  add_uuid:
+    nodes:
+      - 'genomic_info': 'genomic_info_id'

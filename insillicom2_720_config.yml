@@ -1,0 +1,39 @@
+# This is a list of dictionry.  Key is the node, value is the full file path
+submissionfiles:
+  - diagnosis: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_diagnosis.tsv'
+  - file: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_file.tsv'
+  - genomic_info: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_genomicinfo.tsv'
+  - participant: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_participant.tsv'
+  - sample: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_sample.tsv'
+  - study: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_study.tsv'
+  - image: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\Insilicom2\ccdi_harmonization\ccdi_harmonization\phs000720\df_image.tsv'
+outputdir: 'C:\Users\pihltd\OneDrive - National Institutes of Health\FNLCR Projects\ARPA-H\CCDI-CDS Challenge\TDP Fixes\Insilicom2\phs000720\'
+separator: 'tab'  #Can be tab or comma
+fixes:
+  phs: 'phs000720'
+  fileid: 
+    file: 'file_id'
+  participantphs:
+    participant: 'study.phs_accession'
+    study: 'phs_accession'
+  #study_participant_id:
+  #  participant: 'study_participant_id'
+  diagnosis_id:
+    idfield: 'diagnosis_id'
+    diagnosis: 'primary_diagnosis'
+    site: 'primary_site'
+  study_diagnosis_id:
+    idfield: 'study_diagnosis_id'
+    diagnosis: 'diagnosis_id'
+    participant: 'participant.study_participant_id'
+  update_study_participant_id:
+    refnode: 'participant'
+    refpartid: 'participant_id'
+    refstudypartid: 'study_participant_id'
+    nodes:
+      - 'diagnosis'
+      - 'sample'
+    idfield: 'participant.study_participant_id'
+  add_uuid:
+    nodes:
+      - 'genomic_info': 'genomic_info_id'
