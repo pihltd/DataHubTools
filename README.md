@@ -20,6 +20,17 @@ Requires a configuration file, see *kf_dbgap_config.yml* for an example.
 
 -v/--verbose :  Verbose output.  Adding more "v"'s gets more verbose.  Example -vv, -vvv
 
+**Configuration File options**
+Note that the configuration file must be in YAML format\
+- **phs**: The dbGaP phs number for the project\
+- **mapping_file**: The full path to the file containin the mapping betweek the KF Ids and the dbGaP IDs.\
+- **submitted_file**: The GC Participant node submission file.  Can be obtained from the data view in the submission.\
+- **consent_file**: The GC Consent node submission file.  Also can be obtained from the data view in the submission.\
+- **report_file**: The full path for the file where the report on matching will be saved.\
+- **dbgapinfo_file**: The full path for the file where the output of an SSTR query for the phs number will be saved.  Use None if the output should not be saved.\
+- **sstrfile**: The full path to the file saved by the dbgapinfo_file.  If present, the script will use this file instead of the dbGaP API.  Recommended, the API is slower and dbGaP gets grumpy if you hit the API too much.  Use None to use the API.\
+- **testrun**: True/False.  USE FOR DEVELOPMENT/TESTING ONLY, this limits the number of queries to the SSTR API.  
+
 
 ### MDFCDEVersionator.py
 This was done to help ICDC, it reads in an MDF file and adds version numbers to any CDE entry missing the version number.  While potentially useful, it needs a re-write now that bento_mdf supports model writing.
