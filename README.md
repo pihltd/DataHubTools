@@ -11,11 +11,13 @@ A Jupyter notebook that gets all CRDC CDEs and their PVs.  Marginally useful at 
 Adds a CRDC friendly file identifier to a file manifest.  Useful.
 
 ### KFIDandConsentCheck.py
-So Kids First has a problem.  The IDs they gave GC and the IDs in dbGaP don't match.  They're trying to update dbGaP, but it's slow going.  So this script takes a CCDI provided KF-dbGaP mapping file and checks that the GC IDs are mapped to a valid dbGaP ID and consent code. \
-Requires a configuration file, see *kf_dbgap_config.yml* for an example. \
+So Kids First has a problem.  The IDs they gave GC and the IDs in dbGaP don't match.  They're trying to update dbGaP, but it's slow going.  So this script takes a CCDI provided KF-dbGaP mapping file and checks that the GC IDs are mapped to a valid dbGaP ID and consent code.
+
+Requires a configuration file, see *kf_dbgap_config.yml* for an example.
 
 **Runtime options**
 -c/--configfile : Full path to the configuration file
+
 -v/--verbose :  Verbose output.  Adding more "v"'s gets more verbose.  Example -vv, -vvv
 
 
