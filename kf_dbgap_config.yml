@@ -1,0 +1,9 @@
+# Config file for KFIDandConsentCheck.py
+phs: 'phs001228'
+mapping_file: '/media/sf_VMShare/CCDI/KFMap/phs001228 KF dbGaP mapping.csv'
+submitted_file: '/media/sf_VMShare/CCDI/KFMap/KF-ESGR_participant_202601291606.tsv'
+consent_file: '/media/sf_VMShare/CCDI/KFMap/KF-ESGR_consent_group_202601291606.tsv'
+report_file: '/media/sf_VMShare/CCDI/KFMap/phs001228_mapping_report.csv'
+dbgapinfo_file: '/media/sf_VMShare/CCDI/KFMap/phs001228_dbgap.csv'
+sstrfile: '/media/sf_VMShare/CCDI/KFMap/phs001228_dbgap.csv'
+testrun: False

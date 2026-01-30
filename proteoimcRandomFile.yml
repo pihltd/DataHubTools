@@ -1,3 +1,4 @@
+# Config file for RandomFileGenerator.py
 "data_type" : "Binary"
 # file_size in bytes
 "file_size": 1024
